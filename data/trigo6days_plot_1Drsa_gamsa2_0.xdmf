@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Xdmf Version="3.0">
+  <Domain>
+    <Grid Name="mesh" GridType="Uniform">
+      <Topology NumberOfElements="100" TopologyType="PolyLine" NodesPerElement="2">
+        <DataItem Dimensions="100 2" NumberType="UInt" Format="HDF">trigo6days_plot_1Drsa_gamsa2_0.h5:/Mesh/mesh/topology</DataItem>
+      </Topology>
+      <Geometry GeometryType="XY">
+        <DataItem Dimensions="101 2" Format="HDF">trigo6days_plot_1Drsa_gamsa2_0.h5:/Mesh/mesh/geometry</DataItem>
+      </Geometry>
+      <Attribute Name="f_22330185" AttributeType="Scalar" Center="Node">
+        <DataItem Dimensions="101 1" Format="HDF">trigo6days_plot_1Drsa_gamsa2_0.h5:/VisualisationVector/0</DataItem>
+      </Attribute>
+    </Grid>
+  </Domain>
+</Xdmf>

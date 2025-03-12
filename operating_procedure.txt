@@ -1,0 +1,291 @@
+These are instructions for how to generate the results and figures seen in the paper
+to which this DOI corresponds. If you come accross any difficulties or believe that there may be an error in these instructions
+then please contact me on amair@neiker.eus or andrew16.mair@gmail.com.
+
+Many of the codes in the DOI are written using FEniCS (a finite element library for Python).
+This language is often updated and updates are frequently non-backwards compatible. Therefore, if you install a version
+of FEniCS that is newer than 2019.1.0 then the scripts in this folder will not run.
+See the text document "FEniCS setup" for instructions on how to install FEniCS on your own machine.
+
+######################################################################
+Steps for reproducing Figures and Tables from data:
+######################################################################
+
+Data from all the simulations is already included in the folder named
+"data". The steps here do not rerun the simulations but show how the 
+figures and table entries are produced from the resulting data. 
+See the following section for the steps to rerun simulations and
+reproduce data.
+
+- Figure 3: Normalised root length density functions (requires ParaView 5.6.2).
+	- Open ParaView, go to "File" and open: 
+		-"trigo6days_plot_1Dnlen_gaml2_0.xdmf"
+		-"trigo15days_plot_1Dnlen_gaml2_0.xdmf"
+		-"trigo30days_plot_1Dnlen_gaml2_0.xdmf"
+	- For each plot set "Representation = Points" and Point Size = 50.
+	- Choose a colormap (erdc_purple2green)
+        - Rescale the custom range of the colour map to 0.0 - 0.105. 
+
+- Figure 3: Water content and infiltration profiles
+	- Open ParaView, go to "File" and open: 			     
+		-"thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf"
+		-"qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf"
+	- Select "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0"
+		- Click "Apply".
+		- Set "Representation = Points" and Point Size = 50
+		- Rescale the custom range of the colour map to 0.068 - 0.19
+	- Select "qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf"
+		- Click "Apply".
+		- Click "Filters", "Alphabetical", "Glyph" then "Apply"
+		- Select "Glyph1" and set "Scale Array" to the function value "f_???" with "Scale Factor = 1000" and "coloring = Solid color (black)"
+	- With eyes next to "Glyph1" and "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf" 
+	  save screenshots at Time = 0.5, 1.5 and 2.5 days.
+	- Repeat for
+		"thtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf"
+		-"qtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf"
+	- This gives the top row of water content and infiltration diagrams in Figure 3.
+	- For the second and third rows repeat the steps above but where file names have 
+          "trigo15days" or "trigo30days" and "ppat3ptot0_12".
+
+- Figure 4: Normalised root length density profiles generated as in Figure 3
+
+- Figure 4: Water content and infiltration profiles
+	- Open ParaView, go to "File" and open: 			     
+		-"thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0.xdmf"
+		-"qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0.xdmf"
+	- Select "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0"
+		- Click "Apply".
+		- Set "Representation = Points" and Point Size = 50
+		- Rescale the custom range of the colour map to 0.068 - 0.19
+	- Select "qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0.xdmf"
+		- Click "Apply".
+		- Click "Filters", "Alphabetical", "Glyph" then "Apply"
+		- Select "Glyph1" and set "Scale Array" to the function value "f_???" with "Scale Factor = 50" and "coloring = Solid color (black)"
+	- With eyes next to "Glyph1" and "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf" 
+	  save a screenshots at Time = 0.5.
+	- In "Glyph1" change the "Scale Factor" to "750" then save screenshots at Times = 1.5 and 2.5 days.  
+	- Repeat for
+		"thtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0.xdmf"
+		-"qtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0.xdmf"
+	- This gives the top row of water content and infiltration diagrams in Figure 1.
+	- For the second and third rows repeat the steps above but where file names have 
+          "trigo15days" or "trigo30days" and "ppat1ptot0_28".
+
+- Figure 5 and Table 2 (Requires and installation of Python 3):
+	- Open the python script "data_visualisation_fig_3_6_tab_2_3.py"
+	- Scroll to line 577
+ 	Figure 5a:
+		- Set the arguments of the function post_processor to
+		  post_processor('precipitation',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 1, 
+                                 3, 
+                                 10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Run the script.
+	Figure 5b:
+		- Set the arguments of the function post_processor to
+		  post_processor('precipitation',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 2, 
+                                 3, 
+                                 10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Run the script.
+	Figure 5c:
+		- Set the arguments of the function post_processor to
+		  post_processor('precipitation',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 3, 
+                                 3, 
+                                 10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Run the script.
+	Figure 5d:
+		- Set the arguments of the function post_processor to
+		  post_processor('evaporation',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 1, 
+                                 3, 
+                                 10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Run the script. 
+	Figure 5e:
+		- Set the arguments of the function post_processor to
+		  post_processor('evaporation',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 2, 
+                                 3, 
+                                 10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Run the script.
+	Figure 5f:
+		- Set the arguments of the function post_processor to
+		  post_processor('evaporation',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 3, 
+                                 3, 
+                                 10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Run the script.
+	Figure 5g and columns 2 and 3 of Table 2:
+		- Set the arguments of the function post_processor to
+		  post_processor('uptake',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 1, 
+                                 3, 
+                                 10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Run the script.
+	Figure 5h and columns 4 and 5 of Table 2:
+		- Set the arguments of the function post_processor to
+		  post_processor('uptake',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 2, 
+                                 3, 
+                                 10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Run the script.
+	Figure 5i and columns 6 and 7 of Table 2:
+		- Set the arguments of the function post_processor to
+		  post_processor('uptake',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 3, 
+                                 3, 
+                                 10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Run the script.
+
+- Figure 6 and Table 3 (Requires and installation of Python 3):
+	- Open the python script "data_visualisation_fig_3_6_tab_2_3.py"
+	- Scroll to line 577
+	- Change the total precipitation quantity from 0.12 to 0.28
+          in post_processor(...)
+ 	- For each subfigure and table columns, use the same commands as
+	  for the corresponding subfigures of Figure 5 and columns of 
+          Table 2.
+
+- Figure 7
+	- Run the python script "data_visualisation_figure_7.py"
+
+######################################################################
+Steps for reproducing data by rerunning simulations (requires FEniCS):
+######################################################################
+
+It is only necessary to carry out the steps from this section if you want
+to check that the simulations do indeed produce the data reported.
+All the data that will be generated by following the steps below has already been 
+included in the data folder. Therefore, any step or substep can be performed in isolation, 
+should you wish to merely test that the code works and that it produces the data it is
+purported to.
+
+1. Converting CRootBox data to correct format and meshing the simulation domain.
+	- Start the FEniCS container "rhizodeposits-container" and navigate to the "shared" folder.
+	- Run the script "data_converter_y_global_mesh_generator.py"
+
+2. Constructing the 3D density functions for normalised root length and surface area of each root system.
+	- Open the script "rl_sa_density_constructor_3D.py" in your chosen editor.
+	- Move to line 795 and set the argument of the "densities" function to "trigo6days", "trigo15days"
+ 	  or "trigo30days" depending on whether you want to constructt the density functions for
+	  the 6, 15 or 30-day old root system. 
+	- Start the FEniCS container "rhizodeposits-container" and navigate to the "shared" folder.
+	- Run the script "rl_sa_density_constructor_3D.py".
+
+3. Constructing the 1D density functions for normalised root length and surface area of each root system.
+	- Open the script "rl_sa_density_1D.py" in your chosen text editor.
+	- Move to line 303 and set the first argument of the "densities_1D" function to "trigo6days", 
+	  "trigo15days" or "trigo30days" depending on whether you want to constructt the density functions for
+	  the 6, 15 or 30-day old root system. 
+	- Start the FEniCS container "rhizodeposits-container" and navigate to the "shared" folder.
+	- Run the script "rl_sa_density_1D.py".
+
+4. Generating fitting the parameters for the functions of surface tension and contact angle.
+	- Run the script "surface_tension_model_fitter.py" 
+	- Run the script "contact_angle_model_fitter.py" 
+
+5. Running the water transport simulations to generate the data shown in Figures 3 to 7 and Tables 2 and 3
+	- Open the script "model_simulator.py" in your chosen text editor.
+	- Start the FEniCS container "rhizodeposits-container" and navigate to the shared folder.
+	- The for loop in lines 3160-3167 will run the python function simulator for each possible combination
+	  of root system age and precipitation regime.
+	- If you want to run the simulation for only one root system and precipitation regime in particular,
+	  then comment out lines 3160-3167 and uncomment 3169 and 3170 and change the inputs "system", 
+	  "tot" and "pat "of the "simulator" function accordingly.  
+	
+	
+
+	   		
+  	    
+	 
