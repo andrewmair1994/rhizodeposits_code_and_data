@@ -120,14 +120,14 @@ tot_up_no_rhizodeposits30days_ppat3ptot0_28 = np.sum(data_no_rhizodeposits30days
 ###############################################################################
 
 # Total uptakes with rhizodeposits
-tot_up_rhiz = np.array([[tot_up_rhizodeposits30days_ppat3ptot0_12, tot_up_rhizodeposits30days_ppat2ptot0_12, tot_up_rhizodeposits30days_ppat3ptot0_28, tot_up_rhizodeposits30days_ppat1ptot0_12, tot_up_rhizodeposits30days_ppat2ptot0_28, tot_up_rhizodeposits30days_ppat2ptot0_28],
-                        [tot_up_rhizodeposits15days_ppat3ptot0_12, tot_up_rhizodeposits15days_ppat2ptot0_12, tot_up_rhizodeposits15days_ppat3ptot0_28, tot_up_rhizodeposits15days_ppat1ptot0_12, tot_up_rhizodeposits15days_ppat2ptot0_28, tot_up_rhizodeposits15days_ppat2ptot0_28],
-                        [tot_up_rhizodeposits6days_ppat3ptot0_12, tot_up_rhizodeposits6days_ppat2ptot0_12, tot_up_rhizodeposits6days_ppat3ptot0_28, tot_up_rhizodeposits6days_ppat1ptot0_12, tot_up_rhizodeposits6days_ppat2ptot0_28, tot_up_rhizodeposits6days_ppat2ptot0_28]])
+tot_up_rhiz = np.array([[tot_up_rhizodeposits30days_ppat3ptot0_12, tot_up_rhizodeposits30days_ppat2ptot0_12, tot_up_rhizodeposits30days_ppat3ptot0_28, tot_up_rhizodeposits30days_ppat1ptot0_12, tot_up_rhizodeposits30days_ppat2ptot0_28, tot_up_rhizodeposits30days_ppat1ptot0_28],
+                        [tot_up_rhizodeposits15days_ppat3ptot0_12, tot_up_rhizodeposits15days_ppat2ptot0_12, tot_up_rhizodeposits15days_ppat3ptot0_28, tot_up_rhizodeposits15days_ppat1ptot0_12, tot_up_rhizodeposits15days_ppat2ptot0_28, tot_up_rhizodeposits15days_ppat1ptot0_28],
+                        [tot_up_rhizodeposits6days_ppat3ptot0_12, tot_up_rhizodeposits6days_ppat2ptot0_12, tot_up_rhizodeposits6days_ppat3ptot0_28, tot_up_rhizodeposits6days_ppat1ptot0_12, tot_up_rhizodeposits6days_ppat2ptot0_28, tot_up_rhizodeposits6days_ppat1ptot0_28]])
 
 # Total uptakes without rhizodeposits
-tot_up_no_rhiz = np.array([[tot_up_no_rhizodeposits30days_ppat3ptot0_12, tot_up_no_rhizodeposits30days_ppat2ptot0_12, tot_up_no_rhizodeposits30days_ppat3ptot0_28, tot_up_no_rhizodeposits30days_ppat1ptot0_12, tot_up_no_rhizodeposits30days_ppat2ptot0_28, tot_up_no_rhizodeposits30days_ppat2ptot0_28],
-                           [tot_up_no_rhizodeposits15days_ppat3ptot0_12, tot_up_no_rhizodeposits15days_ppat2ptot0_12, tot_up_no_rhizodeposits15days_ppat3ptot0_28, tot_up_no_rhizodeposits15days_ppat1ptot0_12, tot_up_no_rhizodeposits15days_ppat2ptot0_28, tot_up_no_rhizodeposits15days_ppat2ptot0_28],
-                           [tot_up_no_rhizodeposits6days_ppat3ptot0_12, tot_up_no_rhizodeposits6days_ppat2ptot0_12, tot_up_no_rhizodeposits6days_ppat3ptot0_28, tot_up_no_rhizodeposits6days_ppat1ptot0_12, tot_up_no_rhizodeposits6days_ppat2ptot0_28, tot_up_no_rhizodeposits6days_ppat2ptot0_28]])
+tot_up_no_rhiz = np.array([[tot_up_no_rhizodeposits30days_ppat3ptot0_12, tot_up_no_rhizodeposits30days_ppat2ptot0_12, tot_up_no_rhizodeposits30days_ppat3ptot0_28, tot_up_no_rhizodeposits30days_ppat1ptot0_12, tot_up_no_rhizodeposits30days_ppat2ptot0_28, tot_up_no_rhizodeposits30days_ppat1ptot0_28],
+                           [tot_up_no_rhizodeposits15days_ppat3ptot0_12, tot_up_no_rhizodeposits15days_ppat2ptot0_12, tot_up_no_rhizodeposits15days_ppat3ptot0_28, tot_up_no_rhizodeposits15days_ppat1ptot0_12, tot_up_no_rhizodeposits15days_ppat2ptot0_28, tot_up_no_rhizodeposits15days_ppat1ptot0_28],
+                           [tot_up_no_rhizodeposits6days_ppat3ptot0_12, tot_up_no_rhizodeposits6days_ppat2ptot0_12, tot_up_no_rhizodeposits6days_ppat3ptot0_28, tot_up_no_rhizodeposits6days_ppat1ptot0_12, tot_up_no_rhizodeposits6days_ppat2ptot0_28, tot_up_no_rhizodeposits6days_ppat1ptot0_28]])
 
 tot_up_diff = tot_up_rhiz - tot_up_no_rhiz
 
@@ -190,8 +190,8 @@ for tick in ax.get_yticklabels():
 ax.set_xlabel('Quantity of precipitation per event ($cm$)', fontdict = font_label)
 ax.set_ylabel('Root system age (days)', fontdict = font_label)
 
-cbar = ax.figure.colorbar(im, ax=ax, location = 'top', ticks = [-16.77615311, 0, 20, 40, 60, 86.68771214])
-cbar.ax.set_xticklabels(['-16.78', 0, '+20', '+40', '+60', '+86.69'], fontdict = font_ticks)
+cbar = ax.figure.colorbar(im, ax=ax, location = 'top', ticks = [-12.64, 0, 20, 40, 60, 80, 107.93])
+cbar.ax.set_xticklabels(['-12.65', 0, '+20', '+40', '+60', '+80', '+107.94'], fontdict = font_ticks)
 cbar.ax.set_xlabel('Rhizodeposit-induced % change in total uptake ($cm$)', fontdict = font_label)
 
 plt.savefig(f'figures/figure_7.eps')

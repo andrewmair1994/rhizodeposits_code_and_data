@@ -405,21 +405,22 @@ def post_processor(figure,
         ax.set_ylabel('Evaporation rate ($cm\ d^{-1}$)', fontdict = font_label)        
         
     if figure == 'evaporation' and name == 'all':
-        ax.plot(time, data_rhizodeposits6days, 'r-', label = 'Rhiz 6-days old ')
-        ax.plot(time, data_rhizodeposits15days, 'r--', label = 'Rhiz 15-days old')
-        ax.plot(time, data_rhizodeposits30days, 'r:', label = 'Rhiz 30-days old')
-        ax.plot(time, data_no_rhizodeposits6days, 'b-', label = 'No rhiz 6-days old')
-        ax.plot(time, data_no_rhizodeposits15days, 'b--', label = 'No rhiz 15-days old')
-        ax.plot(time, data_no_rhizodeposits30days, 'b:', label = 'No rhiz 30-days old')
-        # ax.plot(time, data_rhizodeposits6days, 'r-')
-        # ax.plot(time, data_rhizodeposits15days, 'r--')
-        # ax.plot(time, data_rhizodeposits30days, 'r:')
-        # ax.plot(time, data_no_rhizodeposits6days, 'b-')
-        # ax.plot(time, data_no_rhizodeposits15days, 'b--')
-        # ax.plot(time, data_no_rhizodeposits30days, 'b:')
+        # ax.plot(time, data_rhizodeposits6days, 'r-', label = 'Rhiz 6-days old ')
+        # ax.plot(time, data_rhizodeposits15days, 'r--', label = 'Rhiz 15-days old')
+        # ax.plot(time, data_rhizodeposits30days, 'r:', label = 'Rhiz 30-days old')
+        # ax.plot(time, data_no_rhizodeposits6days, 'b-', label = 'No rhiz 6-days old')
+        # ax.plot(time, data_no_rhizodeposits15days, 'b--', label = 'No rhiz 15-days old')
+        # ax.plot(time, data_no_rhizodeposits30days, 'b:', label = 'No rhiz 30-days old')
+        ax.plot(time, data_rhizodeposits6days, 'r-')
+        ax.plot(time, data_rhizodeposits15days, 'r--')
+        ax.plot(time, data_rhizodeposits30days, 'r:')
+        ax.plot(time, data_no_rhizodeposits6days, 'b-')
+        ax.plot(time, data_no_rhizodeposits15days, 'b--')
+        ax.plot(time, data_no_rhizodeposits30days, 'b:')
         ax.set_xlim(0, 3)
         ax.set_ylim(0.0, 0.062)
         ax.set_ylabel('Evaporation rate ($cm\ d^{-1}$)', fontdict = font_label)
+        # plt.legend(prop = font_legend)
         
     elif figure == 'deep_percolation' and name != 'all':
         ax.plot(time, data_rhizodeposits, 'r-', label = 'Rhizodeposits')
@@ -518,7 +519,6 @@ def post_processor(figure,
         tick.set_fontname("serif")
          
     # plt.legend(prop = font_legend, bbox_to_anchor = (1, 1))
-    plt.legend(prop = font_legend)
     plt.tight_layout()
     
     plt.savefig(f'figures/{fig_tag}_ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}.eps')
@@ -581,8 +581,8 @@ summed_quantities = post_processor('uptake',
                                    0.069, 
                                    100, 
                                    3000, 
-                                   0.12, 
-                                   2, 
+                                   0.28, 
+                                   3, 
                                    3, 
                                    10, 
                                    'eq', 

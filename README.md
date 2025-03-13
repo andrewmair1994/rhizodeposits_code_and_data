@@ -74,6 +74,9 @@ All found within the "data" folder.
 	  pressure head, water flux, inverse air entry pressure head, hydraulic conductivity,
 	  dried rhizodeposit concentration, and solubilised rhizodeposit concentration.
 
+# Figures
+1. All generated figures end up in the "figures" folder.
+
 # Implementation instructions   
 
 1. One .txt file for guidance on FEniCS setup
