@@ -82,8 +82,8 @@ All found within the "data" folder.
 1. One .txt file for guidance on FEniCS setup
 2. One .txt file describing the required implementation procedure of the codes above, in order to obtain the results of the paper. 
 
-	
-        
+# DOI	
+[![DOI](https://zenodo.org/badge/947326023.svg)](https://doi.org/10.5281/zenodo.15101431)        
 
  
 
