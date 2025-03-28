@@ -4,7 +4,7 @@ authors:
 - family-names: "Mair"
   given-names: "Andrew"
   orcid: "https://orcid.org/0000-0003-3847-5215"
-title: "Software and code relating to manuscript 'Modelling the influence of rhizodeposits on root water uptake'"
+title: "Software and data relating to manuscript 'Modelling the influence of rhizodeposits on root water uptake'"
 version: 0.1.0
 doi: 10.5281/zenodo.15101432
 date-released: 2025-03-28
