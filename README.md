@@ -83,7 +83,7 @@ All found within the "data" folder.
 2. One .txt file describing the required implementation procedure of the codes above, in order to obtain the results of the paper. 
 
 # DOI	
-[![DOI](https://zenodo.org/badge/947326023.svg)](https://doi.org/10.5281/zenodo.15101431)        
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15863072.svg)](https://doi.org/10.5281/zenodo.15863072)   
 
  
 
