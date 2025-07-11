@@ -17,7 +17,6 @@ Created on Wed Aug  7 10:37:09 2024
 
 from fenics import *
 from dolfin import *
-from mshr import *
 import numpy as np
 
 ###############################################################################
@@ -181,6 +180,7 @@ def mesher_global(refinement):
     
     ###########################################################################
     # Defining the soil domain that contains all root systems
+    # Meshing the domain and then saving it out
     ###########################################################################
     
     # Finding the lowest x_1 value of a segment's end in the architecture.
@@ -258,8 +258,11 @@ def mesher_global(refinement):
     
     np.savetxt('data/domain_dimensions_global.txt', domain_dimensions)
     
-    # Creating the domain
-    domain = Box(Point(lft, frnt, bttm), Point(rght, bck, tp))
+    # Creating the box mesh
+    point0 = Point(lft, frnt, bttm)
+    point1 = Point(rght, bck, tp)
+    
+    mesh = BoxMesh(point0, point1, refinement, refinement, refinement)    
     
     print('Dimensions of domain')
     print('length = ', rght - lft)
@@ -304,13 +307,6 @@ def mesher_global(refinement):
     front = Front()
     back = Back()
     
-    ###########################################################################
-    # Generating the mesh and saving it out.
-    ###########################################################################
-    
-    # Generating mesh for master domain.
-    mesh = generate_mesh(domain, refinement)
-    
     # Initialising mesh functions for boundaries of box domain.
     boundaries = MeshFunction("size_t", mesh, 2)
     boundaries.set_all(0)
@@ -329,7 +325,7 @@ def mesher_global(refinement):
     ds = Measure('ds', domain = mesh, subdomain_data = boundaries)
     
     # Saving mesh.
-    File(f'data/mesh_global.xml.gz') << mesh
+    File(f'data/mesh_global_boxmesh.xml.gz') << mesh
     
     return mesh
 
@@ -337,5 +333,5 @@ def mesher_global(refinement):
 # Building a mesh with the mesher_global function
 ##############################################################################
 
-mesher_global(32)
+mesher_global(20)
     

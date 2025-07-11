@@ -14,10 +14,8 @@ Created on Thu Aug  8 09:17:25 2024
 
 from fenics import *
 from dolfin import *
-from mshr import *
 import numpy as np
 import math as math
-import time
 
 ###############################################################################
 # Defining function for surface tension against rhizodeposit concentration.
@@ -1763,7 +1761,8 @@ def simulator(name,
               cw_init, 
               cd_init,
               ex_total,
-              gamma = 2.0):
+              gamma = 2.0,
+              imported_mesh = 'def'):
     """
     
 
@@ -1812,6 +1811,11 @@ def simulator(name,
     gamma : Float, optional
         Width of Gaussian support in 3d root length and surface area density
         functions. The default is 2.0.
+    imported_mesh: String
+        3D mesh that is imported for the construction of root density functions.
+        'def' imports the mesh that was constructed using the deprecated
+        functionality mshr, 'box' imports the mesh that can still be
+        created using available Legacy FEniCS docker images.    
 
     Returns
     -------
@@ -1828,9 +1832,6 @@ def simulator(name,
 
     """
     
-    # Starting timer.
-    t00 = time.clock()
-    
     ###########################################################################
     # Creating vectors to store water lifetime data for post processing.
     ###########################################################################
@@ -1846,23 +1847,27 @@ def simulator(name,
     Nx_lab = str(math.modf(Nx)[1])[:-2]
     Nt_lab = str(math.modf(Nt)[1])[:-2]
     
-    # Insuring soil type entered is valid.
+    # Ensuring mesh name entered is valid.
+    if not (imported_mesh == 'def' or imported_mesh == 'box'):
+        raise TypeError('Invalid entry for imported mesh')
+    
+    # Ensuring soil type entered is valid.
     if not (soil_type == 'sandy_loam' or soil_type == 'loamy_sand' or soil_type == 'sand'):
         raise TypeError('Invalid soil type entered')
         
-    # Insuring initial status entered is valid.
+    # Ensuring initial status entered is valid.
     if not (status0 == 'wetting' or status0 == 'drying'):
         raise TypeError('Invalid initial wetting/drying status entered')
         
-    # Insuring entry for rhizodeposits input is valid.
+    # Ensuring entry for rhizodeposits input is valid.
     if not (rhizodeposits == True or rhizodeposits == False):
         raise TypeError('Invalid entry for rhizodeposits input, should be "True" or "False".')
         
-    # Insuring precipitation pattern is valid.
+    # Ensuring precipitation pattern is valid.
     if not (p_pat == 3 or p_pat == 2 or p_pat == 1):
         raise TypeError('Invalid precipitation pattern entered.')
         
-    # Insuring that input for initial rhizodeposit concentration is valid.
+    # Ensuring that input for initial rhizodeposit concentration is valid.
     if not ((type(cw_init) == float and type(cd_init) == float) or (cw_init == 'eq' and cd_init == 'eq')):
         raise TypeError('Invalid entry for initial dried and saturated rhizodeposits')
         
@@ -2335,15 +2340,15 @@ def simulator(name,
     # density profile.
     ###########################################################################
     
-    NRLD_nodal = np.loadtxt(f'data/{name}_{Nx}_NRLD1D_gaml{gamma_l_int}_{gamma_l_dec}_node_vals.txt')
-    RSA_nodal = np.loadtxt(f'data/{name}_{Nx}_RSA1D_gamsa{gamma_sa_int}_{gamma_sa_dec}_node_vals.txt')
+    NRLD_nodal = np.loadtxt(f'data/{name}_{Nx}_NRLD1D_gaml{gamma_l_int}_{gamma_l_dec}_node_vals_{imported_mesh}.txt')
+    RSA_nodal = np.loadtxt(f'data/{name}_{Nx}_RSA1D_gamsa{gamma_sa_int}_{gamma_sa_dec}_node_vals_{imported_mesh}.txt')
     NRLD = Function(W)
     RSA = Function(W)
     NRLD.vector()[:] = NRLD_nodal
     RSA.vector()[:] = RSA_nodal
     
-    xdmffile_NRLD = XDMFFile(f'data/{name}_plot_1Dnlen_gaml{gamma_l_int}_{gamma_l_dec}.xdmf')
-    xdmffile_RSA = XDMFFile(f'data/{name}_plot_1Drsa_gamsa{gamma_sa_int}_{gamma_sa_dec}.xdmf')
+    xdmffile_NRLD = XDMFFile(f'data/{name}_plot_1Dnlen_gaml{gamma_l_int}_{gamma_l_dec}_{imported_mesh}.xdmf')
+    xdmffile_RSA = XDMFFile(f'data/{name}_plot_1Drsa_gamsa{gamma_sa_int}_{gamma_sa_dec}_{imported_mesh}.xdmf')
     xdmffile_NRLD.write(NRLD)
     xdmffile_RSA.write(RSA)
     
@@ -2462,18 +2467,18 @@ def simulator(name,
         
         # Suspended rhizodeposit concentration
         cw0 = Expression('cw_f + ((cw_r - cw_f)/2)*(1 + (exp(a*(x[0] - rd)) - 1)/(exp(a*(x[0] - rd)) + 1))',
-                         degree = 2, cw_f = 0.0, cw_r = cw_init, a = 1.0, rd = minx)
+                          degree = 2, cw_f = 0.0, cw_r = cw_init, a = 1.0, rd = minx)
         # Dried rhizodeposit concentration.
         cd0 = Expression('cd_f + ((cd_r - cd_f)/2)*(1 + (exp(a*(x[0] - rd)) - 1)/(exp(a*(x[0] - rd)) + 1))',
-                         degree = 2, cd_f = 0.0, cd_r = cd_init, a = 1.0, rd = minx)
+                          degree = 2, cd_f = 0.0, cd_r = cd_init, a = 1.0, rd = minx)
         
     else:
         # Suspended rhizodeposit concentration
         cw0 = Expression('cw_f + ((cw_r - cw_f)/2)*(1 + (exp(a*(x[0] - rd)) - 1)/(exp(a*(x[0] - rd)) + 1))',
-                         degree = 2, cw_f = 0.0, cw_r = 0.0, a = 1.0, rd = minx) 
+                          degree = 2, cw_f = 0.0, cw_r = 0.0, a = 1.0, rd = minx) 
         # Drien rhizodeposit concentration
         cd0 = Expression('cd_f + ((cd_r - cd_f)/2)*(1 + (exp(a*(x[0] - rd)) - 1)/(exp(a*(x[0] - rd)) + 1))',
-                         degree = 2, cd_f = 0.0, cd_r = 0.0, a = 1.0, rd = minx)
+                          degree = 2, cd_f = 0.0, cd_r = 0.0, a = 1.0, rd = minx)
         
     # Writing label for the sum of the product of initial water content and
     # suspended rhizodeposit concentration with the product of bulk density and 
@@ -2513,7 +2518,7 @@ def simulator(name,
         # Setting dummy initial pressure head
         h_init = inv_theta_hyst(theta_init, alpha_vg_d, theta_r0, theta_s0, n_vg, m_vg)
         h0 = Constant(h_init)
-        theta0_test = theta_r0 + (theta_s0 - theta_r0)*se(h_init, alpha_vg_w, n_vg, m_vg)
+        theta0_test = theta_r0 + (theta_s0 - theta_r0)*se(h_init, alpha_vg_d, n_vg, m_vg)
         print('theta0 from h0 when not considering rhizodeposits =', theta0_test)
         
     # print('Wetting and drying status before initial condition', status_j_2)
@@ -2541,7 +2546,7 @@ def simulator(name,
         print('theta0 in rooted section of domain when considering rhizodeposits =', theta0_test)
         
         h0 = Expression('h_f + ((h_r - h_f)/2)*(1 + (exp(a*(x[0] - rd)) - 1)/(exp(a*(x[0] - rd)) + 1))',
-                         degree = 2, h_f = h_init, h_r = h_init_ex, a = 1.0, rd = minx)
+                          degree = 2, h_f = h_init, h_r = h_init_ex, a = 1.0, rd = minx)
     
     # Setting the pressure head condition for the step before that of the
     # initial condition to the same as the initial condition.
@@ -2698,15 +2703,15 @@ def simulator(name,
     # Recording visualisations of initial conditions.
     ###########################################################################
     
-    xdmffile_h = XDMFFile(f'data/h{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}_extot{ex_total_int}_{ex_total_dec}.xdmf')
-    xdmffile_theta = XDMFFile(f'data/th{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.xdmf')
-    xdmffile_K = XDMFFile(f'data/K{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.xdmf')
-    xdmffile_alpha = XDMFFile(f'data/alp{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.xdmf')
-    xdmffile_status = XDMFFile(f'data/stat{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.xdmf')
-    xdmffile_se = XDMFFile(f'data/se{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.xdmf')
-    xdmffile_q = XDMFFile(f'data/q{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.xdmf')
-    xdmffile_cw = XDMFFile(f'data/cw{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.xdmf')
-    xdmffile_cd = XDMFFile(f'data/cd{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.xdmf')
+    xdmffile_h = XDMFFile(f'data/h{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}_extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.xdmf')
+    xdmffile_theta = XDMFFile(f'data/th{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.xdmf')
+    xdmffile_K = XDMFFile(f'data/K{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.xdmf')
+    xdmffile_alpha = XDMFFile(f'data/alp{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.xdmf')
+    xdmffile_status = XDMFFile(f'data/stat{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.xdmf')
+    xdmffile_se = XDMFFile(f'data/se{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.xdmf')
+    xdmffile_q = XDMFFile(f'data/q{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.xdmf')
+    xdmffile_cw = XDMFFile(f'data/cw{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.xdmf')
+    xdmffile_cd = XDMFFile(f'data/cd{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.xdmf')
         
     if rhizodeposits != False:
         xdmffile_h.write(h_, t)
@@ -2780,6 +2785,9 @@ def simulator(name,
     # Alternative model for rhizodeposit transport semi-inspired by Simunek et 
     # al,.(2006) "Colloid-transport ..." Both the wetting and drying of
     # rhizodeposits is incorporated.
+    
+    # Better reference for the model would be Schnepf, Leithner, Klepsch 2012
+    # "Modeling phosphorus uptake by a growing and exuding root system" 
     
     # Bilinear form
     a_cw = theta_vis_*cw*phi_cw*dx \
@@ -3134,28 +3142,22 @@ def simulator(name,
         total_uptake[n] = assemble(S_*dx)
         # print('total uptake at t =', t, 'is', total_uptake[n])
     
-    # Recording time elapsed
-    t11 = time.clock() - t00
-    
-    # Putting time elapsed into an array for saving.
-    te = np.array([t11])
-    
-    # Saving out data for time elapsed.
-    np.savetxt(f'data/computation_time_{name}_{ex_lab}_ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}.txt', te)
-    
     # Saving water loss and uptake quantities after full simulation.
-    np.savetxt(f'data/up_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt', np.array(total_uptake))
-    np.savetxt(f'data/pr_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt', np.array(total_precipitation))
-    np.savetxt(f'data/ev_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt', np.array(total_evaporation))
-    np.savetxt(f'data/ro_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt', np.array(total_runoff))
-    np.savetxt(f'data/dp_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt', np.array(total_deep_percolation))
-    np.savetxt(f'data/wc_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt', np.array(total_water_content))
+    np.savetxt(f'data/up_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt', np.array(total_uptake))
+    np.savetxt(f'data/pr_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt', np.array(total_precipitation))
+    np.savetxt(f'data/ev_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt', np.array(total_evaporation))
+    np.savetxt(f'data/ro_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt', np.array(total_runoff))
+    np.savetxt(f'data/dp_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt', np.array(total_deep_percolation))
+    np.savetxt(f'data/wc_{name}_{ex_lab}T{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt', np.array(total_water_content))
     
     return total_uptake, total_evaporation, total_deep_percolation, total_precipitation, total_runoff
 
-patterns = np.array([1, 2, 3])
-systems = ['trigo6days', 'trigo15days', 'trigo30days']
-precip_tots = np.array([0.12, 0.28])
+# patterns = np.array([1, 2, 3])
+patterns = np.array([3])
+# systems = ['trigo6days', 'trigo15days', 'trigo30days']
+systems = ['trigo30days']
+# precip_tots = np.array([0.12, 0.28])
+precip_tots = np.array([0.28])
 
 for i in range(len(patterns)):
     pat = patterns[i]
@@ -3168,3 +3170,4 @@ for i in range(len(patterns)):
 
 # tu_ex, te_ex, tdp_ex, tpr_ex, tr_ex = simulator(system, 'sandy_loam', 'wetting', 0.069, True, 100, 3000, tot, pat, 0.5, 0.75, 3, 1E-10, 'eq', 'eq', 1.0)    
 # tu, te, tdp, tpr, tr = simulator(system, 'sandy_loam', 'wetting', 0.069, False, 100, 3000, tot, pat, 0.5, 0.75, 3, 1E-10, 'eq', 'eq', 1.0)
+

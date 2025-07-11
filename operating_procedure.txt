@@ -251,14 +251,32 @@ included in the data folder. Therefore, any step or substep can be performed in 
 should you wish to merely test that the code works and that it produces the data it is
 purported to.
 
-1. Converting CRootBox data to correct format and meshing the simulation domain.
+1. Converting CRootBox data to correct format and meshing the simulation domain. Recommended to be skipped.
+	
+	###### IMPORTANT NOTE ######
+	Within the simpulation pipeline a mesh of a 3D soil domain needs to be generated so that 3D 
+        root length density functions can be constructed with the script "rl_sa_density_constructor_3D.py".
+	These root length density functions are then converted to functions of depth by the script "rl_sa_density_1D.py".  
+	Some mesh-constructing capacities of FEniCS that were initially used in the codes for the 3D meshing have since been deprecated.
+	The original 3D mesh, constructed with the deprecated pasckage 'mshr', is included in the data folder and is named
+	"mesh_global.xml."
+	The script "data_converter_y_global_mesh_generator.py" now uses a different function to mesh the same domain and the new mesh
+	it generates is named "mesh_global_boxmesh.xml."
+	The default state of the script pipeline in this DOI is to use the outputs that correspond to the use of "mesh_global.xml", 
+	and it is recommended to keep them this way, i.e. skip this step and move directly to 2. using "mesh_global.xml.".
+
+	However, should you wish to run the codes with "mesh_global_boxmesh.xml.", 
+	then you will need to change the 'imported_mesh' input in all function calls in all scripts from 'def'
+	to 'box.
+        ###### IMPORTANT NOTE ######
+	
 	- Start the FEniCS container "rhizodeposits-container" and navigate to the "shared" folder.
 	- Run the script "data_converter_y_global_mesh_generator.py"
 
 2. Constructing the 3D density functions for normalised root length and surface area of each root system.
 	- Open the script "rl_sa_density_constructor_3D.py" in your chosen editor.
 	- Move to line 795 and set the argument of the "densities" function to "trigo6days", "trigo15days"
- 	  or "trigo30days" depending on whether you want to constructt the density functions for
+ 	  or "trigo30days" depending on whether you want to construct the density functions for
 	  the 6, 15 or 30-day old root system. 
 	- Start the FEniCS container "rhizodeposits-container" and navigate to the "shared" folder.
 	- Run the script "rl_sa_density_constructor_3D.py".
@@ -266,7 +284,7 @@ purported to.
 3. Constructing the 1D density functions for normalised root length and surface area of each root system.
 	- Open the script "rl_sa_density_1D.py" in your chosen text editor.
 	- Move to line 303 and set the first argument of the "densities_1D" function to "trigo6days", 
-	  "trigo15days" or "trigo30days" depending on whether you want to constructt the density functions for
+	  "trigo15days" or "trigo30days" depending on whether you want to construct the density functions for
 	  the 6, 15 or 30-day old root system. 
 	- Start the FEniCS container "rhizodeposits-container" and navigate to the "shared" folder.
 	- Run the script "rl_sa_density_1D.py".

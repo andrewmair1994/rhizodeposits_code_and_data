@@ -36,6 +36,7 @@ def post_processor(figure,
                    cw_init, 
                    cd_init,
                    ex_total,
+                   imported_mesh = 'def'
                    ):
     """
     
@@ -80,6 +81,11 @@ def post_processor(figure,
         Result of summing product of initial water content and initial 
         suspended rhizodeposit concentration with product of soil bulk density and
         dried rhizodeposit concentration.
+    imported_mesh: String
+        3D mesh that is imported for the construction of root density functions.
+        'def' imports the mesh that was constructed using the deprecated
+        functionality mshr, 'box' imports the mesh that can still be
+        created using available Legacy FEniCS docker images.
     Returns
     -------
     summed_quantities : FLoat
@@ -90,6 +96,10 @@ def post_processor(figure,
     ###########################################################################
     # Checking that input values are correct
     ###########################################################################
+    
+    # Ensuring mesh name entered is valid.
+    if not (imported_mesh == 'def' or imported_mesh == 'box'):
+        raise TypeError('Invalid entry for imported mesh')
     
     # Writing an error message if an incompatible entry has been given in the
     # figure input.
@@ -256,8 +266,8 @@ def post_processor(figure,
         or figure == 'total_water_content')
         and name != 'all'):
     
-        data_rhizodeposits = np.loadtxt(f'data/{fig_tag}_{name}_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        data_no_rhizodeposits = np.loadtxt(f'data/{fig_tag}_{name}_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
+        data_rhizodeposits = np.loadtxt(f'data/{fig_tag}_{name}_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        data_no_rhizodeposits = np.loadtxt(f'data/{fig_tag}_{name}_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
             
         # Computing cumulative totals.
         cum_data_rhizodeposits = np.cumsum(tau*data_rhizodeposits)
@@ -274,12 +284,12 @@ def post_processor(figure,
            or figure == 'total_water_content')
           and name == 'all'):
         
-        data_rhizodeposits6days = np.loadtxt(f'data/{fig_tag}_trigo6days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        data_rhizodeposits15days = np.loadtxt(f'data/{fig_tag}_trigo15days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        data_rhizodeposits30days = np.loadtxt(f'data/{fig_tag}_trigo30days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        data_no_rhizodeposits6days = np.loadtxt(f'data/{fig_tag}_trigo6days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        data_no_rhizodeposits15days = np.loadtxt(f'data/{fig_tag}_trigo15days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        data_no_rhizodeposits30days = np.loadtxt(f'data/{fig_tag}_trigo30days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
+        data_rhizodeposits6days = np.loadtxt(f'data/{fig_tag}_trigo6days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        data_rhizodeposits15days = np.loadtxt(f'data/{fig_tag}_trigo15days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        data_rhizodeposits30days = np.loadtxt(f'data/{fig_tag}_trigo30days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        data_no_rhizodeposits6days = np.loadtxt(f'data/{fig_tag}_trigo6days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        data_no_rhizodeposits15days = np.loadtxt(f'data/{fig_tag}_trigo15days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        data_no_rhizodeposits30days = np.loadtxt(f'data/{fig_tag}_trigo30days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
             
         # Computing cumulative totals.
         cum_data_rhizodeposits6days = np.cumsum(tau*data_rhizodeposits6days)
@@ -298,12 +308,12 @@ def post_processor(figure,
         
     elif(figure == 'total_water_loss'
          and name != 'all'):
-        ev_rhizodeposits = np.loadtxt(f'data/ev_{name}_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')    
-        ro_rhizodeposits = np.loadtxt(f'data/ro_{name}_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt') 
-        dp_rhizodeposits = np.loadtxt(f'data/dp_{name}_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt') 
-        ev_no_rhizodeposits = np.loadtxt(f'data/ev_{name}_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')    
-        ro_no_rhizodeposits = np.loadtxt(f'data/ro_{name}_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')    
-        dp_no_rhizodeposits = np.loadtxt(f'data/dp_{name}_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
+        ev_rhizodeposits = np.loadtxt(f'data/ev_{name}_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')    
+        ro_rhizodeposits = np.loadtxt(f'data/ro_{name}_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt') 
+        dp_rhizodeposits = np.loadtxt(f'data/dp_{name}_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt') 
+        ev_no_rhizodeposits = np.loadtxt(f'data/ev_{name}_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')    
+        ro_no_rhizodeposits = np.loadtxt(f'data/ro_{name}_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')    
+        dp_no_rhizodeposits = np.loadtxt(f'data/dp_{name}_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
     
         twl_rhizodeposits = ev_rhizodeposits + dp_rhizodeposits + ro_rhizodeposits
         twl_no_rhizodeposits = ev_no_rhizodeposits + dp_no_rhizodeposits + ro_no_rhizodeposits  
@@ -316,24 +326,24 @@ def post_processor(figure,
         summed_quantity_no_rhizodeposits = cum_twl_no_rhizodeposits[-1]
         
     else:
-        ev_rhizodeposits6days = np.loadtxt(f'data/ev_trigo6days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')    
-        ev_rhizodeposits15days = np.loadtxt(f'data/ev_trigo15days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        ev_rhizodeposits30days = np.loadtxt(f'data/ev_trigo30days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        dp_rhizodeposits6days = -1*np.loadtxt(f'data/dp_trigo6days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')    
-        dp_rhizodeposits15days = -1*np.loadtxt(f'data/dp_trigo15days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        dp_rhizodeposits30days = -1*np.loadtxt(f'data/dp_trigo30days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        ro_rhizodeposits6days = np.loadtxt(f'data/ro_trigo6days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')    
-        ro_rhizodeposits15days = np.loadtxt(f'data/ro_trigo15days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt') 
-        ro_rhizodeposits30days = np.loadtxt(f'data/ro_trigo30days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        ev_no_rhizodeposits6days = np.loadtxt(f'data/ev_trigo6days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')    
-        ev_no_rhizodeposits15days = np.loadtxt(f'data/ev_trigo15days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        ev_no_rhizodeposits30days = np.loadtxt(f'data/ev_trigo30days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        dp_no_rhizodeposits6days = -1*np.loadtxt(f'data/dp_trigo6days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        dp_no_rhizodeposits15days = -1*np.loadtxt(f'data/dp_trigo15days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        dp_no_rhizodeposits30days = -1*np.loadtxt(f'data/dp_trigo30days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        ro_no_rhizodeposits6days = np.loadtxt(f'data/ro_trigo6days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt')
-        ro_no_rhizodeposits15days = np.loadtxt(f'data/ro_trigo15days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt') 
-        ro_no_rhizodeposits30days = np.loadtxt(f'data/ro_trigo30days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}.txt') 
+        ev_rhizodeposits6days = np.loadtxt(f'data/ev_trigo6days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')    
+        ev_rhizodeposits15days = np.loadtxt(f'data/ev_trigo15days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        ev_rhizodeposits30days = np.loadtxt(f'data/ev_trigo30days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        dp_rhizodeposits6days = -1*np.loadtxt(f'data/dp_trigo6days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')    
+        dp_rhizodeposits15days = -1*np.loadtxt(f'data/dp_trigo15days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        dp_rhizodeposits30days = -1*np.loadtxt(f'data/dp_trigo30days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        ro_rhizodeposits6days = np.loadtxt(f'data/ro_trigo6days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')    
+        ro_rhizodeposits15days = np.loadtxt(f'data/ro_trigo15days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt') 
+        ro_rhizodeposits30days = np.loadtxt(f'data/ro_trigo30days_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        ev_no_rhizodeposits6days = np.loadtxt(f'data/ev_trigo6days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')    
+        ev_no_rhizodeposits15days = np.loadtxt(f'data/ev_trigo15days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        ev_no_rhizodeposits30days = np.loadtxt(f'data/ev_trigo30days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        dp_no_rhizodeposits6days = -1*np.loadtxt(f'data/dp_trigo6days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        dp_no_rhizodeposits15days = -1*np.loadtxt(f'data/dp_trigo15days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        dp_no_rhizodeposits30days = -1*np.loadtxt(f'data/dp_trigo30days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        ro_no_rhizodeposits6days = np.loadtxt(f'data/ro_trigo6days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt')
+        ro_no_rhizodeposits15days = np.loadtxt(f'data/ro_trigo15days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt') 
+        ro_no_rhizodeposits30days = np.loadtxt(f'data/ro_trigo30days_no_exT{T_int}_{T_dec}theta0_{theta_init_int}_{theta_init_dec}cw0_{cw_init_int}_{cw_init_dec}cd0_{cd_init_int}_{cd_init_dec}{st_tag}_{stat_lab}ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}Nx{Nx_lab}Nt{Nt_lab}tol{tol_tag}extot{ex_total_int}_{ex_total_dec}_{imported_mesh}.txt') 
         
         twl_rhizodeposits6days = ev_rhizodeposits6days + dp_rhizodeposits6days + ro_rhizodeposits6days
         twl_rhizodeposits15days = ev_rhizodeposits15days + dp_rhizodeposits15days + ro_rhizodeposits15days
@@ -379,19 +389,19 @@ def post_processor(figure,
     font_label = {'family': 'serif',
                   'color':  'black',
                   'weight': 'normal',
-                  'size': 17.5,
+                  'size': 16,
                   }
 
     # Setting font for legend.
     font_legend = font_manager.FontProperties(family='serif',
                                               weight='normal',
-                                              style='normal', size=14)
+                                              style='normal', size=16)
 
     # Initiating figure
     fig,ax = plt.subplots(ncols=1,nrows=1,figsize=(8,4))
     
     # Formatting
-    ax.tick_params(axis = 'both', labelsize = 20)
+    ax.tick_params(axis = 'both', labelsize = 16)
     ax.set_xlabel('Time ($d$)', fontdict = font_label)
 
     ax.xaxis.set_label_position('bottom')
@@ -467,7 +477,7 @@ def post_processor(figure,
         ax.plot(time, data_no_rhizodeposits30days, 'b:')
         ax.set_xlim(0, 3)
         ax.set_ylim(0.0, 1.25e-2)
-        ax.set_ylabel('Uptake rate ($cm\ d^{-1}$)', fontdict = font_label)
+        # ax.set_ylabel('Uptake rate ($cm\ d^{-1}$)', fontdict = font_label)
         ax.ticklabel_format(axis = 'y', style = 'sci', scilimits = (0,0))
     
     elif figure == 'total_water_content' and name != 'all':
@@ -521,8 +531,8 @@ def post_processor(figure,
     # plt.legend(prop = font_legend, bbox_to_anchor = (1, 1))
     plt.tight_layout()
     
-    plt.savefig(f'figures/{fig_tag}_ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}.eps')
-    plt.savefig(f'figures/{fig_tag}_ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}.png')
+    plt.savefig(f'figures/{fig_tag}_ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}_{imported_mesh}.eps')
+    plt.savefig(f'figures/{fig_tag}_ppat{p_tag}ptot{p_tot_int}_{p_tot_dec}_{imported_mesh}.png')
     
     if name != 'all' and figure != 'total_water_loss':
         print('cumulative', figure, 'rhizodeposits =', summed_quantities[0])
@@ -581,10 +591,10 @@ summed_quantities = post_processor('uptake',
                                    0.069, 
                                    100, 
                                    3000, 
-                                   0.12, 
-                                   1, 
+                                   0.28, 
                                    3, 
-                                   10, 
+                                   3, 
+                                   1E-10, 
                                    'eq', 
                                    'eq',
                                    1.0)

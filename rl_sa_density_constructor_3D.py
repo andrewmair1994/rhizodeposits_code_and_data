@@ -20,7 +20,6 @@ Created on Wed Aug  7 12:54:35 2024
 
 from fenics import *
 from dolfin import *
-from mshr import *
 import numpy as np
 from numpy import linalg as la
 from scipy.stats import multivariate_normal
@@ -489,7 +488,8 @@ def rsa_density_constructor(segments,
 ###############################################################################
 
 def densities(name,
-              gamma = 2.0):
+              gamma = 2.0,
+              imported_mesh = 'def'):
     
     """
     Parameters
@@ -501,6 +501,13 @@ def densities(name,
         The initial factor multiplying the entries of the covariance matrix 
         that is used to define the gaussian density functions for each segment 
         of the root system. Default value gamma = 2.
+    
+    imported_mesh: String
+        3D mesh that is imported for the construction of root density functions.
+        'def' imports the mesh that was constructed using the deprecated
+        functionality mshr, 'box' imports the mesh that can be created using 
+        installations in docker containers that are built from the images
+        of legacy FEniCS that remain available.
         
     Returns
     -------
@@ -517,6 +524,10 @@ def densities(name,
         densitwy function          
 
     """
+    
+    # Ensuring mesh name entered is valid.
+    if not (imported_mesh == 'def' or imported_mesh == 'box'):
+        raise TypeError('Invalid entry for imported mesh')
     
     ###########################################################################
     # Importing crootbox root system data for this plant and root system combo.
@@ -578,6 +589,13 @@ def densities(name,
     maxx36 = np.amax(segments[:, 6])
     maxx3 = np.amax(np.array([maxx32, maxx36]))
     
+    # Importing mesh. 
+    if imported_mesh == 'def':
+        mesh = Mesh(f'data/mesh_global.xml.gz')
+    
+    elif imported_mesh == 'box':
+        mesh = Mesh(f'data/mesh_global_boxmesh.xml.gz') 
+    
     # Import global domain dimensions   
     domain_dimensions = np.loadtxt('data/domain_dimensions_global.txt')
         
@@ -589,9 +607,6 @@ def densities(name,
     bttm = domain_dimensions[2, 0]
     tp = domain_dimensions[2, 1]
         
-    # Creating a domain 
-    domain = Box(Point(lft, frnt, bttm), Point(rght, bck, tp))
-    
     # Base of soil domain
     class Bottom(SubDomain):
         def inside(self, x, on_boundary):
@@ -629,8 +644,6 @@ def densities(name,
     right = Right()
     front = Front()
     back = Back()
-        
-    mesh = Mesh(f'data/mesh_global.xml.gz')
         
     # Initialising mesh functions for boundaries of box domain.
     boundaries = MeshFunction("size_t", mesh, 2)
@@ -708,7 +721,7 @@ def densities(name,
     print("Integer component of gamma_l =", gamma_l_int)
     print("Decimal component of gamma_l =", gamma_l_dec)
     
-    np.savetxt(f'data/{name}_gaml{gamma_l_int}_{gamma_l_dec}_global.txt', np.array([gamma]))
+    np.savetxt(f'data/{name}_gaml{gamma_l_int}_{gamma_l_dec}_global_{imported_mesh}.txt', np.array([gamma]))
         
     ###########################################################################
     # Constructing the surface area density function for the root system.
@@ -759,15 +772,15 @@ def densities(name,
     gamma_sa_int = str(math.modf(gamma)[1])[:-2]
     gamma_sa_dec = str(np.round(math.modf(gamma)[0], 2))[2:]
         
-    np.savetxt(f'data/{name}_gamsa{gamma_sa_int}_{gamma_sa_dec}_global.txt', np.array([gamma]))
+    np.savetxt(f'data/{name}_gamsa{gamma_sa_int}_{gamma_sa_dec}_global_{imported_mesh}.txt', np.array([gamma]))
         
     ###########################################################################
     # Post processing of density functions
     ###########################################################################
     
-    RLD_store = TimeSeries(f'data/{name}_store_len_gaml{gamma_l_int}_{gamma_l_dec}_global')
-    NRLD_store = TimeSeries(f'data/{name}_store_nlen_gaml{gamma_l_int}_{gamma_l_dec}_global')
-    RSA_store = TimeSeries(f'data/{name}_store_rsa_gamsa{gamma_sa_int}_{gamma_sa_dec}_global')
+    RLD_store = TimeSeries(f'data/{name}_store_len_gaml{gamma_l_int}_{gamma_l_dec}_global_{imported_mesh}')
+    NRLD_store = TimeSeries(f'data/{name}_store_nlen_gaml{gamma_l_int}_{gamma_l_dec}_global_{imported_mesh}')
+    RSA_store = TimeSeries(f'data/{name}_store_rsa_gamsa{gamma_sa_int}_{gamma_sa_dec}_global_{imported_mesh}')
     
     # Assigning the appropriate values to the stored data.
     RLD_store.store(RLD.vector(), 1)
@@ -778,9 +791,9 @@ def densities(name,
     # Saving the visualisations of the density functions
     ###########################################################################
     
-    xdmffile_RLD = XDMFFile(f'data/{name}_plot_len_gaml{gamma_l_int}_{gamma_l_dec}_global.xdmf')
-    xdmffile_NRLD = XDMFFile(f'data/{name}_plot_nlen_gaml{gamma_l_int}_{gamma_l_dec}_global.xdmf')
-    xdmffile_RSA = XDMFFile(f'data/{name}_plot_rsa_gamsa{gamma_sa_int}_{gamma_sa_dec}_global.xdmf')
+    xdmffile_RLD = XDMFFile(f'data/{name}_plot_len_gaml{gamma_l_int}_{gamma_l_dec}_global_{imported_mesh}.xdmf')
+    xdmffile_NRLD = XDMFFile(f'data/{name}_plot_nlen_gaml{gamma_l_int}_{gamma_l_dec}_global_{imported_mesh}.xdmf')
+    xdmffile_RSA = XDMFFile(f'data/{name}_plot_rsa_gamsa{gamma_sa_int}_{gamma_sa_dec}_global_{imported_mesh}.xdmf')
     
     xdmffile_RLD.write(RLD)
     xdmffile_NRLD.write(NRLD)

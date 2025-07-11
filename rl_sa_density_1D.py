@@ -15,7 +15,6 @@ Created on Wed Aug  7 13:53:00 2024
 
 from fenics import *
 from dolfin import *
-from mshr import *
 import numpy as np
 import math as math
 
@@ -27,12 +26,12 @@ import math as math
 # Input to interval mesh is number of intervals, so number of nodes is this  
 # this number plus 1.
 
-def densities_1D(name, Nx, N_int, gamma = 2.0):
+def densities_1D(name, Nx, N_int, gamma = 2.0, imported_mesh = 'def'):
     """
     
     Parameters
     ----------
-    name : string
+    name : String
         Name of the root system in question.
     Nx : Integer
         Level of refinement of vertical domain.
@@ -42,7 +41,12 @@ def densities_1D(name, Nx, N_int, gamma = 2.0):
         The initial factor multiplying the entries of the covariance matrix 
         that is used to define the gaussian density functions for each segment 
         of the root system. Default value gamma = 2.
-
+    imported_mesh: String
+        3D mesh that is imported for the construction of root density functions.
+        'def' imports the mesh that was constructed using the deprecated
+        functionality mshr, 'box' imports the mesh that can still be
+        created using available Legacy FEniCS docker images.  
+    
     Returns
     -------        
     RLD_1D : np.array(Nx +1, )
@@ -54,6 +58,14 @@ def densities_1D(name, Nx, N_int, gamma = 2.0):
         Nodal values of laterally averaged root surface area density
         
     """
+    
+    ###########################################################################
+    
+    # Ensuring mesh name entered is valid.
+    if not (imported_mesh == 'def' or imported_mesh == 'box'):
+        raise TypeError('Invalid entry for imported mesh')
+    
+    ###########################################################################
     
     segments = np.loadtxt(f'data/{name}formatted.txt')
 
@@ -128,6 +140,13 @@ def densities_1D(name, Nx, N_int, gamma = 2.0):
     print("new x3 minimum =", minx3)
     print("new x3 maximum =", maxx3)
     
+    # Importing mesh. 
+    if imported_mesh == 'def':
+        mesh = Mesh(f'data/mesh_global.xml.gz')
+    
+    elif imported_mesh == 'box':
+        mesh = Mesh(f'data/mesh_global_boxmesh.xml.gz') 
+    
     # Import global domain dimensions   
     domain_dimensions = np.loadtxt('data/domain_dimensions_global.txt')
         
@@ -146,9 +165,6 @@ def densities_1D(name, Nx, N_int, gamma = 2.0):
     print('bottom boundary', bttm)
     print('tp boundary', tp)    
         
-    # Creating a domain 
-    domain = Box(Point(lft, frnt, bttm), Point(rght, bck, tp))
-    
     # Computing lateral area of box domain.
     Alat = (rght - lft)*(bck - frnt)
     print('Lateral area =', Alat)
@@ -196,8 +212,6 @@ def densities_1D(name, Nx, N_int, gamma = 2.0):
     front = Front()
     back = Back()
         
-    mesh = Mesh(f'data/mesh_global.xml.gz')
-        
     # Initialising mesh functions for boundaries of box domain.
     boundaries = MeshFunction("size_t", mesh, 2)
     boundaries.set_all(0)
@@ -226,9 +240,9 @@ def densities_1D(name, Nx, N_int, gamma = 2.0):
     NRLD = Function(W)
     RSA = Function(W)
     
-    RLD_store = TimeSeries(f'data/{name}_store_len_gaml{gamma_l_int}_{gamma_l_dec}_global')
-    NRLD_store = TimeSeries(f'data/{name}_store_nlen_gaml{gamma_l_int}_{gamma_l_dec}_global')
-    RSA_store = TimeSeries(f'data/{name}_store_rsa_gamsa{gamma_sa_int}_{gamma_sa_dec}_global')
+    RLD_store = TimeSeries(f'data/{name}_store_len_gaml{gamma_l_int}_{gamma_l_dec}_global_{imported_mesh}')
+    NRLD_store = TimeSeries(f'data/{name}_store_nlen_gaml{gamma_l_int}_{gamma_l_dec}_global_{imported_mesh}')
+    RSA_store = TimeSeries(f'data/{name}_store_rsa_gamsa{gamma_sa_int}_{gamma_sa_dec}_global_{imported_mesh}')
         
     RLD_store.retrieve(RLD.vector(), 1)
     NRLD_store.retrieve(NRLD.vector(), 1)
@@ -276,15 +290,34 @@ def densities_1D(name, Nx, N_int, gamma = 2.0):
             for j in range(Nx2):
                 print('spatial sample point =', (x_xi(xis[i]), y_eta(etas[j]), x3s[x3]))
                 
-                if x3s[x3] != bttm:
-                    lat_I_RLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3])
-                    lat_I_NRLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*NRLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3])
-                    lat_I_RSA += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RSA(x_xi(xis[i]), y_eta(etas[j]), x3s[x3])
+                if imported_mesh == 'def':
+                    
+                    if x3s[x3] != bttm:
+                        lat_I_RLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3])
+                        lat_I_NRLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*NRLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3])
+                        lat_I_RSA += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RSA(x_xi(xis[i]), y_eta(etas[j]), x3s[x3])
+                    
+                    else:
+                        lat_I_RLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] + 1E-10)
+                        lat_I_NRLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*NRLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] + 1E-10)
+                        lat_I_RSA += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RSA(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] + 1E-10)
                 
-                else:
-                    lat_I_RLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] + 1E-10)
-                    lat_I_NRLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*NRLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] + 1E-10)
-                    lat_I_RSA += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RSA(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] + 1E-10)
+                elif imported_mesh == 'box':
+                
+                    if (x3s[x3] != bttm and x3s[x3] != tp):
+                        lat_I_RLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3])
+                        lat_I_NRLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*NRLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3])
+                        lat_I_RSA += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RSA(x_xi(xis[i]), y_eta(etas[j]), x3s[x3])
+                    
+                    elif x3s[x3] == tp:
+                        lat_I_RLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] - 1E-10)
+                        lat_I_NRLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*NRLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] - 1E-10)
+                        lat_I_RSA += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RSA(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] - 1E-10)
+                
+                    else:
+                        lat_I_RLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] + 1E-10)
+                        lat_I_NRLD += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*NRLD(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] + 1E-10)
+                        lat_I_RSA += (rght - lft)*(bck - frnt)*(1/4)*w1s[i]*w2s[j]*RSA(x_xi(xis[i]), y_eta(etas[j]), x3s[x3] + 1E-10)
             
         RLD_1D[x3] = lat_I_RLD/Alat
         NRLD_1D[x3] = lat_I_NRLD/Alat
@@ -292,10 +325,9 @@ def densities_1D(name, Nx, N_int, gamma = 2.0):
     
     # Saving out the 1D nodal values
     
-    else:
-        np.savetxt(f'data/{name}_{Nx}_RSA1D_gamsa{gamma_sa_int}_{gamma_sa_dec}_node_vals.txt', RSA_1D)
-        np.savetxt(f'data/{name}_{Nx}_RLD1D_gaml{gamma_l_int}_{gamma_l_dec}_node_vals.txt', RLD_1D*Alat)
-        np.savetxt(f'data/{name}_{Nx}_NRLD1D_gaml{gamma_l_int}_{gamma_l_dec}_node_vals.txt', NRLD_1D*Alat)
+    np.savetxt(f'data/{name}_{Nx}_RSA1D_gamsa{gamma_sa_int}_{gamma_sa_dec}_node_vals_{imported_mesh}.txt', RSA_1D)
+    np.savetxt(f'data/{name}_{Nx}_RLD1D_gaml{gamma_l_int}_{gamma_l_dec}_node_vals_{imported_mesh}.txt', RLD_1D*Alat)
+    np.savetxt(f'data/{name}_{Nx}_NRLD1D_gaml{gamma_l_int}_{gamma_l_dec}_node_vals_{imported_mesh}.txt', NRLD_1D*Alat)
         
     return RLD_1D, NRLD_1D, RSA_1D
     

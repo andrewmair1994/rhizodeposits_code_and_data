@@ -1,102 +1,79 @@
 This document details how to setup fenics on a Windows machine so that the codes in this repository can be run.
 
-1. Install Docker on your windows machine by following the guidance on https://docs.docker.com/docker-for-windows/install/.
+#########################################################################
+1. Installing docker
+#########################################################################
+
+Install Docker on your windows machine by following the guidance on https://docs.docker.com/docker-for-windows/install/.
    The video https://www.youtube.com/watch?v=_9AWYlt86B8&t=304s is also helpful.
 
-2. Create a Docker container within which to run FEniCS by following these steps.
-   (a). Open the windows command prompt and navigate to the directory where you have saved the code, data, and supporting documents associated with the DOI this directory will hereafter be referred to as "rhizodeposits_code_and_data".
-   (b). Navigate into the rhizodeposits-image folder and build your FEniCS image by running the following command:
-                
-		cd rhizodeposits-image
-		docker build .
-        
-	The output should then read something like
-		[+] Building 0.2s (7/7) FINISHED
- 		=> [internal] load build definition from Dockerfile                                                                                                                                                                                    0.0s
- 		=> => transferring dockerfile: 32B                                                                                                                                                                                                     0.0s
-		=> [internal] load .dockerignore                                                                                                                                                                                                       0.0s
- 		=> => transferring context: 2B                                                                                                                                                                                                         0.0s
- 		=> [internal] load metadata for quay.io/fenicsproject/stable:latest                                                                                                                                                                    0.0s
- 		=> [1/3] FROM quay.io/fenicsproject/stable:latest                                                                                                                                                                                      0.0s
- 		=> CACHED [2/3] RUN apt-get -qq update &&     apt-get -y upgrade &&     apt-get -y install python3-pip &&     apt-get clean                                                                                                            0.0s
- 		=> CACHED [3/3] RUN pip3 install --upgrade pip &&     pip3 install scipy==1.5.4 &&     pip3 install scikit-learn &&     pip3 install scikit-optimize &&     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*                              0.0s
-		=> exporting to image                                                                                                                                                                                                                  0.1s
- 		=> => exporting layers                                                                                                                                                                                                                 0.0s
- 		=> => writing image sha256:afdcdba14101ad2305b8c451fb4ce52722e52c0dd3aaa7830ea7f907e55ba4a3
 
-	The string that comes after sha256: is the name of the image, so in this case afdcdba14101ad2305b8c451fb4ce52722e52c0dd3aaa7830ea7f907e55ba4a3.
-	This builds the container using the instructions in "Dockerfile" within the folder rhizodeposits-image. The "Dockerfile" provided in this DOI 
-        is non-standard as it builds a FEniCS image that is equipped with SciPy and the libraries required to run Bayesian Optimisation and Powell's method.
-        For more information on how to build bespoke FEniCS images see section 4.8 in https://fenics.readthedocs.io/projects/containers/en/latest/work_flows.html
-        and also forum posts such as https://fenicsproject.discourse.group/t/how-to-add-a-python-module-to-the-fenics-docker-container/1665/3.
-	WARNING: If you would like to see the script in "Dockerfile" then do not open with Notepad as this will convert "Dockerfile"
-        to a text file and the setup process will fail. It is recommended that you install Atom to view the "Dockerfile" instead.  
-   
-   (c). Tag the created image for future use by running the command
-		
-		docker tag afdcdba14101ad2305b8c451fb4ce52722e52c0dd3aaa7830ea7f907e55ba4a3 quay.io/my-user/rhizodeposits-image
-		
-			
-   (d). Navigate back to rhizodeposits_code_and_data by running the command:
-		
-		cd ..
+#########################################################################
+2. Building docker image and container
+#########################################################################
 
-   (d). Name the created container say "rhizodeposits-container" and share files from the current directory path for example C:\Users\me\Documents\rhizodeposits_code_and_data into the container by running the following command
-		
-		docker run -ti -v C:\Users\me\Documents\rhizodeposits_code_and_data:/home/fenics/shared --name rhizodeposits-container quay.io/my-user/rhizodeposits-image
+Open command prompt
+
+(a). Open the windows command prompt and navigate to the directory where you have saved the code, data, and supporting documents associated with the DOI this directory will hereafter be referred to as "rhizodeposits_code_and_data_ghcr".
+
+(b). Navigate into the folder named "fenics-ghcr-repo-image" and build your FEniCS image by running the following command:
+
+	docker build -t fenics-2019-ghcr .
+     
+     Here the image is named "fenics-2019-ghcr" but you could choose any other name you like.
+
+#########################################################################
+3. Running naming and mounting directory to the docker container 
+#########################################################################
+
+Name the created container say "rhizodeposits-container" and share files from the current directory path for example C:\Users\me\Documents\rhizodeposits_code_and_data_ghcr into the container by running the following command
+
+	docker run -it --name rhizodeposits-container -v C:\Users\me\Documents\rhizodeposits_code_and_data:/home/fenics/shared fenics-2019-ghcr bash
+
+This will start the container and give it the name "rhizodeposits-container". The output should then look something like this
+
+	root@70a3a723b077:/#
+
+To exit the container run
 	
-	This builds the container "rhizodeposits-container" and gives it access to all codes and data that exist within rhizodeposits_code_and_data. It also starts the 
-        container automatically and your command prompt should read like:
+	exit
 
-		# FEniCS stable version image
+#########################################################################
+4. Starting, running codes and exiting the container
+#########################################################################
 
-		Welcome to FEniCS/stable!
+Whenever you want to run codes you have downloaded from the DOI you should use the following procedure:  
+(a). Open Command prompt and navigate to DOI_folder.
+(b). To start the container rhizodeposits-container run the command:
 
-		This image provides a full-featured and optimized build of the stable
-		release of FEniCS.
 
-		To help you get started this image contains a number of demo
-		programs. Explore the demos by entering the 'demo' directory, for
-		example:
+	docker start -ai rhizodeposits-container
 
-    			cd ~/demo/python/documented/poisson
-    			python3 demo_poisson.py
-		fenics@030e44613a30:~$
+(c). Navigate within the container as follows to access the working directory you had previously mounted.
 
-   (e). To exit the container run:
-		
-		exit
+ 	cd home/fenics/shared
 
-	Then stop the container from running with the command:
-
-		docker stop rhizodeposits-container
-
-3. Whenever you want to run codes you have downloaded from the DOI you should use the following procedure:  
-   (a). Open Command prompt and navigate to DOI_dolder.
-   (b). To start the container rhizodeposits-container run the command:
-		
-		docker start rhizodeposits-container
-
-   (c). To then use FEniCS within this started container run the command:
-		
-		docker exec -ti -u fenics rhizodeposits-container /bin/bash -l
-
-   (d). To access the codes navigate into the shared folder using the command:
-
-		cd shared
-
-   (e). By running the command:
+(d). By running the command:
 	
 		ls
 
-	within this directory you should see all the contents of rhizodeposits_code_and_data.
+     you should see all the contents of the DOI rhizodeposits_code_and_data.
 
-   (f). To run one of the .py scripts, say "script_xyz.py", within this container, run the command:
+(e). To run one of the .py scripts, say "script_xyz.py", within this container, run the command:
 	
 		python3 script_xyz.py
 
-	The .py codes of this project were all writted using the text editor Spyder, though other text editors
-        such as VIM and Atom will also work.
-         		 				 
+	The .py codes of this project were all written using the text editor Spyder, though other text editors
+        such as VIM and Atom will also work. 
 
-Further support for FEniCS can be found at https://fenics-containers.readthedocs.io/en/latest/index.html		 	       
+
+
+
+
+
+
+
+
+ 
+
+
