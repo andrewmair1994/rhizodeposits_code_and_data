@@ -28,21 +28,21 @@ reproduce data.
 
 - Figure 3: Water content and infiltration profiles
 	- Open ParaView, go to "File" and open: 			     
-		-"thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf"
-		-"qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf"
-	- Select "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0"
+		-"thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
+		-"qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
+	- Select "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def"
 		- Click "Apply".
 		- Set "Representation = Points" and Point Size = 50
 		- Rescale the custom range of the colour map to 0.068 - 0.19
-	- Select "qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf"
+	- Select "qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
 		- Click "Apply".
 		- Click "Filters", "Alphabetical", "Glyph" then "Apply"
 		- Select "Glyph1" and set "Scale Array" to the function value "f_???" with "Scale Factor = 1000" and "coloring = Solid color (black)"
-	- With eyes next to "Glyph1" and "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf" 
+	- With eyes next to "Glyph1" and "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf" 
 	  save screenshots at Time = 0.5, 1.5 and 2.5 days.
 	- Repeat for
-		"thtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf"
-		-"qtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf"
+		"thtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
+		-"qtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
 	- This gives the top row of water content and infiltration diagrams in Figure 3.
 	- For the second and third rows repeat the steps above but where file names have 
           "trigo15days" or "trigo30days" and "ppat3ptot0_12".
@@ -51,22 +51,22 @@ reproduce data.
 
 - Figure 4: Water content and infiltration profiles
 	- Open ParaView, go to "File" and open: 			     
-		-"thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0.xdmf"
-		-"qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0.xdmf"
-	- Select "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0"
+		-"thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0_def.xdmf"
+		-"qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0_def.xdmf"
+	- Select "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0_def"
 		- Click "Apply".
 		- Set "Representation = Points" and Point Size = 50
 		- Rescale the custom range of the colour map to 0.068 - 0.19
-	- Select "qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0.xdmf"
+	- Select "qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0_def.xdmf"
 		- Click "Apply".
 		- Click "Filters", "Alphabetical", "Glyph" then "Apply"
 		- Select "Glyph1" and set "Scale Array" to the function value "f_???" with "Scale Factor = 50" and "coloring = Solid color (black)"
-	- With eyes next to "Glyph1" and "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0.xdmf" 
+	- With eyes next to "Glyph1" and "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf" 
 	  save a screenshots at Time = 0.5.
 	- In "Glyph1" change the "Scale Factor" to "750" then save screenshots at Times = 1.5 and 2.5 days.  
 	- Repeat for
-		"thtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0.xdmf"
-		-"qtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0.xdmf"
+		"thtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0_def.xdmf"
+		-"qtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0_def.xdmf"
 	- This gives the top row of water content and infiltration diagrams in Figure 1.
 	- For the second and third rows repeat the steps above but where file names have 
           "trigo15days" or "trigo30days" and "ppat1ptot0_28".
@@ -86,7 +86,7 @@ reproduce data.
                                  0.12, 
                                  1, 
                                  3, 
-                                 10, 
+                                 1E-10, 
                                  'eq', 
                                  'eq',
                                  1.0)
@@ -103,7 +103,7 @@ reproduce data.
                                  0.12, 
                                  2, 
                                  3, 
-                                 10, 
+                                 1E-10, 
                                  'eq', 
                                  'eq',
                                  1.0)
@@ -120,7 +120,7 @@ reproduce data.
                                  0.12, 
                                  3, 
                                  3, 
-                                 10, 
+                                 1E-10, 
                                  'eq', 
                                  'eq',
                                  1.0)
@@ -137,7 +137,7 @@ reproduce data.
                                  0.12, 
                                  1, 
                                  3, 
-                                 10, 
+                                 1E-10, 
                                  'eq', 
                                  'eq',
                                  1.0)
@@ -154,7 +154,7 @@ reproduce data.
                                  0.12, 
                                  2, 
                                  3, 
-                                 10, 
+                                 1E-10, 
                                  'eq', 
                                  'eq',
                                  1.0)
@@ -171,7 +171,7 @@ reproduce data.
                                  0.12, 
                                  3, 
                                  3, 
-                                 10, 
+                                 1E-10, 
                                  'eq', 
                                  'eq',
                                  1.0)
@@ -188,7 +188,7 @@ reproduce data.
                                  0.12, 
                                  1, 
                                  3, 
-                                 10, 
+                                 1E-10, 
                                  'eq', 
                                  'eq',
                                  1.0)
@@ -205,7 +205,7 @@ reproduce data.
                                  0.12, 
                                  2, 
                                  3, 
-                                 10, 
+                                 1E-10, 
                                  'eq', 
                                  'eq',
                                  1.0)
@@ -222,7 +222,7 @@ reproduce data.
                                  0.12, 
                                  3, 
                                  3, 
-                                 10, 
+                                 1E-10, 
                                  'eq', 
                                  'eq',
                                  1.0)
