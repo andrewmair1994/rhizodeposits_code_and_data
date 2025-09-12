@@ -27,18 +27,34 @@ This folder contains code that can be used to reproduce the data and results fro
    between soil water surface tension and wheat rhizodeposit concentration, and saves out the
    parameter values.
 
-6. "model_simulator.py"
+6. "viscosity_model_fitter.py"
+   A Python script that fits a function to the data of Hosseini & Mossaddeghi (2024), for the relationship 
+   between soil water viscosity and wheat rhizodeposit concentration, and saves out the
+   parameter values
+
+7. "rooting_depth_calculator.py"
+   A Python script that determines the rooting depth of each root system.
+
+8. "zone_of_uptake_calculator.py"
+   A Python script that identifies the depths at which each root system becomes most dense and determine
+   the region of soil that should be considered as the uptake zone.
+
+9. "rhizodeposit_effect_visualiser.py"
+   A Python script to show how rhizodeposit concentration affects the curves for water retention and 
+   soil hydraulic conductivity in our model setup.   
+
+10. "model_simulator.py"
    The Python/FEniCS script that is used to simulate the model shown in the paper and obtain the data
    presented in Figures 3 to 7 and Tables 2 and 3.
 
-7. "data_visualisation_fig_3_6_tab_2_3.py"
-   The Python script that can be used to plot the Figures 3 to 6 of the paper and generate the
+11. "data_visualisation_fig_3_6_tab_2.py"
+   The Python script that can be used to plot the Figures 3 to 6 of the paper and 
    calculate the total uptakes shown in Tables 2 and 3.
 
-8. "data_visualisation_figure_7.py"
+12. "data_visualisation_figure_7.py"
    The Python script that can be used to plot Figure 7 of the paper.
 
-9. Folder named "rhizodeposits-image"
+13. Folder named "rhizodeposits-image"
    Image file for installing FEniCS, see FEniCS_setup.txt.	
    No need to edit this file in anyway. Do not open with Notepad.
 

@@ -258,7 +258,7 @@ def densities_1D(name, Nx, N_int, gamma = 2.0, imported_mesh = 'def'):
     RSA_1D = np.zeros(Nx + 1)
     
     ###########################################################################
-    # Calculating laterally averaged volumetric density profiles
+    # Calculating laterally averaged density profiles
     ###########################################################################
     
     # Vector of x3 coordinates at which to compute a lateral average.

@@ -14,7 +14,7 @@ Install Docker on your windows machine by following the guidance on https://docs
 
 Open command prompt
 
-(a). Open the windows command prompt and navigate to the directory where you have saved the code, data, and supporting documents associated with the DOI this directory will hereafter be referred to as "rhizodeposits_code_and_data_ghcr".
+(a). Open the windows command prompt and navigate to the directory where you have saved the code, data, and supporting documents associated with the DOI this directory will hereafter be referred to as "rhizodeposits_code_and_data".
 
 (b). Navigate into the folder named "fenics-ghcr-repo-image" and build your FEniCS image by running the following command:
 
@@ -26,7 +26,7 @@ Open command prompt
 3. Running naming and mounting directory to the docker container 
 #########################################################################
 
-Name the created container say "rhizodeposits-container" and share files from the current directory path for example C:\Users\me\Documents\rhizodeposits_code_and_data_ghcr into the container by running the following command
+Name the created container say "rhizodeposits-container" and share files from the current directory path for example C:\Users\me\Documents\rhizodeposits_code_and_data into the container by running the following command
 
 	docker run -it --name rhizodeposits-container -v C:\Users\me\Documents\rhizodeposits_code_and_data:/home/fenics/shared fenics-2019-ghcr bash
 

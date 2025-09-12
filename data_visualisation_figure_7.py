@@ -150,14 +150,14 @@ def post_processor(imported_mesh = 'def'):
     ###############################################################################
 
     # Total uptakes with rhizodeposits
-    tot_up_rhiz = np.array([[tot_up_rhizodeposits30days_ppat3ptot0_12, tot_up_rhizodeposits30days_ppat2ptot0_12, tot_up_rhizodeposits30days_ppat3ptot0_28, tot_up_rhizodeposits30days_ppat1ptot0_12, tot_up_rhizodeposits30days_ppat2ptot0_28, tot_up_rhizodeposits30days_ppat1ptot0_28],
-                            [tot_up_rhizodeposits15days_ppat3ptot0_12, tot_up_rhizodeposits15days_ppat2ptot0_12, tot_up_rhizodeposits15days_ppat3ptot0_28, tot_up_rhizodeposits15days_ppat1ptot0_12, tot_up_rhizodeposits15days_ppat2ptot0_28, tot_up_rhizodeposits15days_ppat1ptot0_28],
-                            [tot_up_rhizodeposits6days_ppat3ptot0_12, tot_up_rhizodeposits6days_ppat2ptot0_12, tot_up_rhizodeposits6days_ppat3ptot0_28, tot_up_rhizodeposits6days_ppat1ptot0_12, tot_up_rhizodeposits6days_ppat2ptot0_28, tot_up_rhizodeposits6days_ppat1ptot0_28]])
+    tot_up_rhiz = np.array([[tot_up_rhizodeposits30days_ppat3ptot0_12, tot_up_rhizodeposits30days_ppat2ptot0_12, tot_up_rhizodeposits30days_ppat1ptot0_12, tot_up_rhizodeposits30days_ppat3ptot0_28, tot_up_rhizodeposits30days_ppat2ptot0_28, tot_up_rhizodeposits30days_ppat1ptot0_28],
+                            [tot_up_rhizodeposits15days_ppat3ptot0_12, tot_up_rhizodeposits15days_ppat2ptot0_12, tot_up_rhizodeposits15days_ppat1ptot0_12, tot_up_rhizodeposits15days_ppat3ptot0_28, tot_up_rhizodeposits15days_ppat2ptot0_28, tot_up_rhizodeposits15days_ppat1ptot0_28],
+                            [tot_up_rhizodeposits6days_ppat3ptot0_12, tot_up_rhizodeposits6days_ppat2ptot0_12, tot_up_rhizodeposits6days_ppat1ptot0_12, tot_up_rhizodeposits6days_ppat3ptot0_28, tot_up_rhizodeposits6days_ppat2ptot0_28, tot_up_rhizodeposits6days_ppat1ptot0_28]])
 
     # Total uptakes without rhizodeposits
-    tot_up_no_rhiz = np.array([[tot_up_no_rhizodeposits30days_ppat3ptot0_12, tot_up_no_rhizodeposits30days_ppat2ptot0_12, tot_up_no_rhizodeposits30days_ppat3ptot0_28, tot_up_no_rhizodeposits30days_ppat1ptot0_12, tot_up_no_rhizodeposits30days_ppat2ptot0_28, tot_up_no_rhizodeposits30days_ppat1ptot0_28],
-                               [tot_up_no_rhizodeposits15days_ppat3ptot0_12, tot_up_no_rhizodeposits15days_ppat2ptot0_12, tot_up_no_rhizodeposits15days_ppat3ptot0_28, tot_up_no_rhizodeposits15days_ppat1ptot0_12, tot_up_no_rhizodeposits15days_ppat2ptot0_28, tot_up_no_rhizodeposits15days_ppat1ptot0_28],
-                               [tot_up_no_rhizodeposits6days_ppat3ptot0_12, tot_up_no_rhizodeposits6days_ppat2ptot0_12, tot_up_no_rhizodeposits6days_ppat3ptot0_28, tot_up_no_rhizodeposits6days_ppat1ptot0_12, tot_up_no_rhizodeposits6days_ppat2ptot0_28, tot_up_no_rhizodeposits6days_ppat1ptot0_28]])
+    tot_up_no_rhiz = np.array([[tot_up_no_rhizodeposits30days_ppat3ptot0_12, tot_up_no_rhizodeposits30days_ppat2ptot0_12, tot_up_no_rhizodeposits30days_ppat1ptot0_12, tot_up_no_rhizodeposits30days_ppat3ptot0_28, tot_up_no_rhizodeposits30days_ppat2ptot0_28, tot_up_no_rhizodeposits30days_ppat1ptot0_28],
+                               [tot_up_no_rhizodeposits15days_ppat3ptot0_12, tot_up_no_rhizodeposits15days_ppat2ptot0_12, tot_up_no_rhizodeposits15days_ppat1ptot0_12, tot_up_no_rhizodeposits15days_ppat3ptot0_28, tot_up_no_rhizodeposits15days_ppat2ptot0_28, tot_up_no_rhizodeposits15days_ppat1ptot0_28],
+                               [tot_up_no_rhizodeposits6days_ppat3ptot0_12, tot_up_no_rhizodeposits6days_ppat2ptot0_12, tot_up_no_rhizodeposits6days_ppat1ptot0_12, tot_up_no_rhizodeposits6days_ppat3ptot0_28, tot_up_no_rhizodeposits6days_ppat2ptot0_28, tot_up_no_rhizodeposits6days_ppat1ptot0_28]])
 
     tot_up_diff = tot_up_rhiz - tot_up_no_rhiz
     
@@ -192,7 +192,7 @@ def post_processor(imported_mesh = 'def'):
                                               weight='normal',
                                               style='normal', size=16)
     
-    regimes = ['0.04 (3)', '0.06 (2)', '0.093 (3)', '0.12 (1)', '0.14 (2)', '0.28 (1)']
+    regimes = ['0.04 (3)', '0.06 (2)', '0.12 (1)', '0.093 (3)', '0.14 (2)', '0.28 (1)']
     system_age = ['30', '15', '6']
     
     fig, ax = plt.subplots()
@@ -221,8 +221,8 @@ def post_processor(imported_mesh = 'def'):
     ax.set_xlabel('Quantity of precipitation per event ($cm$)', fontdict = font_label)
     ax.set_ylabel('Root system age (days)', fontdict = font_label)
 
-    cbar = ax.figure.colorbar(im, ax=ax, location = 'top', ticks = [-12.65, 0, 20, 40, 60, 80, 108.17])
-    cbar.ax.set_xticklabels(['-12.66', 0, '+20', '+40', '+60', '+80', '+108.17'], fontdict = font_ticks)
+    cbar = ax.figure.colorbar(im, ax=ax, location = 'top', ticks = [-8.53, 0, 20, 40, 60, 80, 100, 115.95])
+    cbar.ax.set_xticklabels(['-8.54', 0, '+20', '+40', '+60', '+80', '+100', '+115.95'], fontdict = font_ticks)
     cbar.ax.set_xlabel('Rhizodeposit-induced % change in total uptake ($cm$)', fontdict = font_label)
 
     plt.savefig(f'figures/figure_7_{imported_mesh}.eps')

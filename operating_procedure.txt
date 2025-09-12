@@ -17,6 +17,35 @@ figures and table entries are produced from the resulting data.
 See the following section for the steps to rerun simulations and
 reproduce data.
 
+- Figures 1 (b) and (c):
+	- Open the Python code rhizodeposit_effect_visualiser.py   
+	- Change the input in plotter(...) in line 587 to 'theta'
+	  to plot the effect of rhizodeposits on water retention (b)
+	- Change the input in plotter(...) in line 587 to 'K'
+	  to plot the effect of rhizodeposits on hydraulic conductivity (c)
+
+- Figure 2: Normalised root length density functions (requires ParaView 5.6.2).
+	- Open ParaView, go to "File" and open: 
+		-"trigo6days_plot_1Dnlen_gaml2_0.xdmf"
+		-"trigo15days_plot_1Dnlen_gaml2_0.xdmf"
+		-"trigo30days_plot_1Dnlen_gaml2_0.xdmf"
+	- For each plot set "Representation = Points" and Point Size = 50.
+	- Choose a colormap (erdc_purple2green)
+        - Rescale the custom range of the colour map to 0.0 - 0.105. 
+
+- Figure 2: Water content (requires ParaView 5.6.2).
+	- Open ParaView, go to "File" and open: 
+		-"thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
+		-"thtrigo15days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
+		-"thtrigo30days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
+	- For each plot set "Representation = Points" and Point Size = 50.
+	- Choose a colormap 
+        - Rescale the custom range of the colour map to 0.0 - 0.41.
+	- Save out the initial condition.
+
+- Figure 2: Precipitation regimes.
+	- See instructions for precipitation figures in Figure 5
+
 - Figure 3: Normalised root length density functions (requires ParaView 5.6.2).
 	- Open ParaView, go to "File" and open: 
 		-"trigo6days_plot_1Dnlen_gaml2_0.xdmf"
@@ -26,19 +55,20 @@ reproduce data.
 	- Choose a colormap (erdc_purple2green)
         - Rescale the custom range of the colour map to 0.0 - 0.105. 
 
-- Figure 3: Water content and infiltration profiles
+- Figure 3: Water content and flux profiles
 	- Open ParaView, go to "File" and open: 			     
 		-"thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
 		-"qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
 	- Select "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def"
 		- Click "Apply".
 		- Set "Representation = Points" and Point Size = 50
-		- Rescale the custom range of the colour map to 0.068 - 0.19
+		- Rescale the custom range of the colour map to 0.069 - 0.19
 	- Select "qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
 		- Click "Apply".
-		- Click "Filters", "Alphabetical", "Glyph" then "Apply"
-		- Select "Glyph1" and set "Scale Array" to the function value "f_???" with "Scale Factor = 1000" and "coloring = Solid color (black)"
-	- With eyes next to "Glyph1" and "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf" 
+		- Set "Representation = Points" and Point Size = 50
+		- Rescale the custom range of the colour map to -1.2 - 0.14
+	- With eyes next to "qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf" 
+          and "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf", 
 	  save screenshots at Time = 0.5, 1.5 and 2.5 days.
 	- Repeat for
 		"thtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf"
@@ -59,11 +89,11 @@ reproduce data.
 		- Rescale the custom range of the colour map to 0.068 - 0.19
 	- Select "qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0_def.xdmf"
 		- Click "Apply".
-		- Click "Filters", "Alphabetical", "Glyph" then "Apply"
-		- Select "Glyph1" and set "Scale Array" to the function value "f_???" with "Scale Factor = 50" and "coloring = Solid color (black)"
-	- With eyes next to "Glyph1" and "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf" 
-	  save a screenshots at Time = 0.5.
-	- In "Glyph1" change the "Scale Factor" to "750" then save screenshots at Times = 1.5 and 2.5 days.  
+		- Set "Representation = Points" and Point Size = 50
+		- Rescale the custom range of the colour map to -1.2 - 0.14
+	- With eyes next to "qtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf" 
+          and "thtrigo6days_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat3ptot0_12Nx100Nt3000tol10extot1_0_def.xdmf", 
+	  save screenshots at Time = 0.5, 1.5 and 2.5 days. 
 	- Repeat for
 		"thtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0_def.xdmf"
 		-"qtrigo6days_no_exT3_0theta0_0_07cw0_eq_cd0_eq_sal_w0ppat1ptot0_28Nx100Nt3000tol10extot1_0_def.xdmf"
@@ -72,8 +102,8 @@ reproduce data.
           "trigo15days" or "trigo30days" and "ppat1ptot0_28".
 
 - Figure 5 and Table 2 (Requires and installation of Python 3):
-	- Open the python script "data_visualisation_fig_3_6_tab_2_3.py"
-	- Scroll to line 577
+	- Open the python script "data_visualisation_fig_3_6_tab_2.py"
+	- Scroll to line 794
  	Figure 5a:
 		- Set the arguments of the function post_processor to
 		  post_processor('precipitation',
@@ -176,7 +206,64 @@ reproduce data.
                                  'eq',
                                  1.0)
 		- Run the script.
-	Figure 5g and columns 2 and 3 of Table 2:
+	Figure 5g and columns 3 and 4 of row 7 of Table 2:
+		- Set the arguments of the function post_processor to
+		  post_processor('lower_flux',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 1, 
+                                 3, 
+                                 1E-10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Comment out line 570 which sets axes limits for case with 0.28cm total rainfall.
+		- Uncomment line 571 which sets axes limits for case with 0.12cm total rainfall.
+		- Run the script.
+	Figure 5h and columns 3 and 4 of row 4 of Table 2:
+		- Set the arguments of the function post_processor to
+		  post_processor('lower_flux',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 2, 
+                                 3, 
+                                 1E-10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Comment out line 570 which sets axes limits for case with 0.28cm total rainfall.
+		- Uncomment line 571 which sets axes limits for case with 0.12cm total rainfall.
+		- Run the script.
+	Figure 5i and columns 3 and 4 of row 1 of Table 2:
+		- Set the arguments of the function post_processor to
+		  post_processor('lower_flux',
+                                 'all', 
+                                 'sandy_loam', 
+                                 'wetting', 
+                                 0.069, 
+                                 100, 
+                                 3000, 
+                                 0.12, 
+                                 1, 
+                                 3, 
+                                 1E-10, 
+                                 'eq', 
+                                 'eq',
+                                 1.0)
+		- Comment out line 570 which sets axes limits for case with 0.28cm total rainfall.
+		- Uncomment line 571 which sets axes limits for case with 0.12cm total rainfall.
+		- Run the script.
+	Figure 5j and columns 5 and 6 of row 7 of Table 2:
 		- Set the arguments of the function post_processor to
 		  post_processor('uptake',
                                  'all', 
@@ -193,7 +280,7 @@ reproduce data.
                                  'eq',
                                  1.0)
 		- Run the script.
-	Figure 5h and columns 4 and 5 of Table 2:
+	Figure 5k and columns 5 and 6 of row 4 Table 2:
 		- Set the arguments of the function post_processor to
 		  post_processor('uptake',
                                  'all', 
@@ -210,7 +297,7 @@ reproduce data.
                                  'eq',
                                  1.0)
 		- Run the script.
-	Figure 5i and columns 6 and 7 of Table 2:
+	Figure 5l and columns 5 and 6 of row 1 of Table 2:
 		- Set the arguments of the function post_processor to
 		  post_processor('uptake',
                                  'all', 
@@ -228,14 +315,17 @@ reproduce data.
                                  1.0)
 		- Run the script.
 
-- Figure 6 and Table 3 (Requires and installation of Python 3):
-	- Open the python script "data_visualisation_fig_3_6_tab_2_3.py"
-	- Scroll to line 577
+- Figure 6 and Table 2 (Requires and installation of Python 3):
+	- Open the python script "data_visualisation_fig_3_6_tab_2.py"
+	- Comment out line 571 and uncomment line 570 to set the Y-axis limits 
+	  of the deep percolation figure to the values that correspond to 
+          total precipitation of 0.28
+	- Scroll to line 794
 	- Change the total precipitation quantity from 0.12 to 0.28
           in post_processor(...)
- 	- For each subfigure and table columns, use the same commands as
-	  for the corresponding subfigures of Figure 5 and columns of 
-          Table 2.
+ 	- For each subfigure of figure 6 and the columns of table 2 between row 10 and 18, 
+	  use the same commands as for the corresponding subfigures of Figure 5 and columns of 
+          Table 2 between rows 1 and 9.
 
 - Figure 7
 	- Run the python script "data_visualisation_figure_7.py"
@@ -289,18 +379,19 @@ purported to.
 	- Start the FEniCS container "rhizodeposits-container" and navigate to the "shared" folder.
 	- Run the script "rl_sa_density_1D.py".
 
-4. Generating fitting the parameters for the functions of surface tension and contact angle.
+4. Generating fitting the parameters for the functions of surface tension, contact angle and viscosity.
 	- Run the script "surface_tension_model_fitter.py" 
-	- Run the script "contact_angle_model_fitter.py" 
+	- Run the script "contact_angle_model_fitter.py"
+	- Run the script "viscosity_model_fitter.py" 
 
-5. Running the water transport simulations to generate the data shown in Figures 3 to 7 and Tables 2 and 3
+5. Running the water transport simulations to generate the data shown in Figures 3 to 7 and Table 2 
 	- Open the script "model_simulator.py" in your chosen text editor.
 	- Start the FEniCS container "rhizodeposits-container" and navigate to the shared folder.
-	- The for loop in lines 3160-3167 will run the python function simulator for each possible combination
+	- The for loop in lines 3327-3334 will run the python function simulator for each possible combination
 	  of root system age and precipitation regime.
 	- If you want to run the simulation for only one root system and precipitation regime in particular,
-	  then comment out lines 3160-3167 and uncomment 3169 and 3170 and change the inputs "system", 
-	  "tot" and "pat "of the "simulator" function accordingly.  
+	  then comment out lines 3327-3334 and uncomment 3336 and 3337 and change the inputs "system", 
+	  "tot" and "pat "of the "simulator" function.  
 	
 	
 
